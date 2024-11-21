@@ -1,0 +1,30 @@
+func (r *WASMRuntime) InitializeImports(api *BlockchainAPI) {
+    importObject := wasmer.NewImportObject()
+
+    // Example: Register a "write_state" function
+    importObject.Register("env", map[string]wasmer.Int32ToVoid{
+        "write_state": func(key, value int32) {
+            if err := r.qasMeter.ConsumeQas(200); err != nil {
+                panic("out of gas")
+            }
+            api.WriteState(int32ToString(key), int32ToString(value))
+        },
+    })
+
+    // Example: Register a "read_state" function
+    importObject.Register("env", map[string]wasmer.Int32ToInt32{
+        "read_state": func(key int32) int32 {
+            if err := r.qasMeter.ConsumeQas(100); err != nil {
+                panic("out of gas")
+            }
+            value, err := api.ReadState(int32ToString(key))
+            if err != nil {
+                panic(err.Error())
+            }
+            return stringToInt32(value)
+        },
+    })
+
+    r.imports = importObject
+}
+

@@ -1,4 +1,4 @@
-# *i n t e r t i a* 
+# *i n e r t i a* 
 > 1. the natural tendency of objects in motion to stay in motion
 
 > 2. an object's resistance to changes in its motion
